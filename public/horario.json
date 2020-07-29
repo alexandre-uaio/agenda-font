@@ -1,0 +1,90 @@
+{
+  "fatima": {
+    "segunda-feira": [{ "value": "19:30", "text": "19:30" }],
+    "terça-feira": [
+      {
+        "value": "19:30",
+        "text": "19:30"
+      }
+    ],
+    "quarta-feira": [
+      {
+        "value": "19:30",
+        "text": "19:30"
+      }
+    ],
+    "quinta-feira": [
+      {
+        "value": "19:30",
+        "text": "19:30"
+      }
+    ],
+    "sexta-feira": [
+      {
+        "value": "19:30",
+        "text": "19:30"
+      }
+    ],
+    "sábado": [
+      {
+        "value": "16:00",
+        "text": "16:00"
+      },
+      {
+        "value": "19:00",
+        "text": "19:00"
+      }
+    ],
+    "domingo": [
+      {
+        "value": "07:00",
+        "text": "07:00"
+      },
+      {
+        "value": "10:00",
+        "text": "10:00"
+      },
+      {
+        "value": "16:00",
+        "text": "16:00"
+      },
+      {
+        "value": "19:00",
+        "text": "19:00"
+      }
+    ]
+  },
+  "saojose": {
+    "segunda-feira": [],
+    "terça-feira": [],
+    "quarta-feira": [
+      {
+        "value": "19:30",
+        "text": "19:30"
+      }
+    ],
+    "quinta-feira": [],
+    "sexta-feira": [
+      {
+        "value": "19:30",
+        "text": "19:30"
+      }
+    ],
+    "sábado": [
+      {
+        "value": "19:00",
+        "text": "19:00"
+      }
+    ],
+    "domingo": [
+      {
+        "value": "09:30",
+        "text": "09:30"
+      },
+      {
+        "value": "19:00",
+        "text": "19:00"
+      }
+    ]
+  }
+}
