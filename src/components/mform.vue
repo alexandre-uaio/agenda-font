@@ -36,6 +36,7 @@
                   <b-form-input
                     placeholder="Informe seu nome"
                     id="nomemissa"
+                    v-model="nome"
                   ></b-form-input>
                 </b-form-group>
               </b-col>
@@ -44,6 +45,7 @@
                   <b-form-input
                     placeholder="Idade"
                     id="idademissa"
+                    v-model="idade"
                   ></b-form-input>
                 </b-form-group>
               </b-col>
@@ -53,18 +55,20 @@
               <b-form-input
                 placeholder="Informe seu celular/telefone"
                 id="celularmissa"
+                v-model="celular"
               ></b-form-input>
             </b-form-group>
           </div>
         </b-form>
         <b-row>
           <b-col>
-            <b-button variant="success" block="">
-              <b-icon icon="calendar-plus-fill" aria-hidden="true"></b-icon> Agendar
-              </b-button>
+            <b-button variant="success"  block="" @click="agendarMissa">
+              <b-icon icon="calendar-plus-fill" class="mr-2" aria-hidden="true"></b-icon>
+              Agendar Missa
+            </b-button>
           </b-col>
           <b-col>
-            <b-button variant="primary" block="">Cancelar</b-button>
+            <b-button variant="primary" block="" @click="tstReservas">Cancelar</b-button>
           </b-col>
         </b-row>
       </b-col>
@@ -107,6 +111,10 @@ export default {
       datamissa: "",
       diamissa: "",
       horamissa: "",
+      nome: "",
+      celular: "",
+      idade: "",
+      assento: "",
       comunidade: [
         { value: null, text: "Selecione o local" },
         { value: "fatima", text: "Paróquia Nossa Senhora de Fátima" },
@@ -252,6 +260,76 @@ export default {
         }
       }
     },
+    agendarMissa()
+    {
+      console.log("Passei aqui Alexandre no botao");
+      console.log("Comunidade.: " + this.selcomunidade);
+      console.log("Data.: " + this.datamissa);
+      console.log("Dia Missa.: " + this.diamissa);
+      console.log("Hora.: " + this.horamissa);
+      console.log("Nome.: " + this.nome);
+      console.log("Idade.: " + this.idade);
+      console.log("Celular.: " + this.celular);
+      this.assento = 88;
+      console.log("Assento.: " + this.assento);
+
+      Vue.axios
+        .post("missa", {
+          
+            datamissa: this.datamissa,
+            horamissa: this.horamissa,
+            comunidade: this.selcomunidade,
+            nome:this.nome,
+            celular:this.celular,
+            idade:this.idade,
+            assento:this.assento
+          
+        })
+        .then((response) => {
+
+          console.log(response.status)
+          console.log("Resposta do Comando");
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log("Retorno com erro!");
+          console.log(error);
+        })
+        .then(function() {
+          console.log("Sempre passa aqui!");
+        });
+      
+      
+    },
+    tstReservas(){
+      Vue.axios
+        .get("missas", {
+          params: {
+            datamissa: "2020-08-11",
+            horamissa: "19:30",
+            comunidade: "fatima",
+          },
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            this.assentosocupados = response.data.length;
+            this.assentoslivres = this.totalassentos - this.assentosocupados;
+            console.log("Número de Registros.: " + response.data.length);
+          } else {
+            this.assentoslivres = this.totalassentos;
+          }
+          console.log("Resposta do Comando");
+          console.log(response);
+        })
+        .catch((error) => {
+          this.assentoslivres = this.totalassentos;
+          console.log("Retorno com erro!");
+          console.log(error);
+        })
+        .then(function() {
+          console.log("Sempre passa aqui!");
+        });
+    }
   },
 };
 </script>
