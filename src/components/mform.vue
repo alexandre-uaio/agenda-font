@@ -13,40 +13,22 @@
           </b-form-group>
 
           <b-form-group label="Data" label-for="datamissa">
-            <b-form-datepicker
-              id="datamissa"
-              v-model="datamissa"
-              @context="onContext"
-              class="mb-2"
-            ></b-form-datepicker>
+            <b-form-datepicker id="datamissa" v-model="datamissa" @context="onContext" class="mb-2"></b-form-datepicker>
           </b-form-group>
 
           <b-form-group label="Horário" label-for="horamissa">
-            <b-form-select
-              id="horamissa"
-              v-model="horamissa"
-              :options="horario"
-              @change="SetTeste"
-            ></b-form-select>
+            <b-form-select id="horamissa" v-model="horamissa" :options="horario" @change="SetTeste"></b-form-select>
           </b-form-group>
           <div v-if="bmissa">
             <b-row>
               <b-col cols="9">
                 <b-form-group label="Nome" label-for="nomemissa">
-                  <b-form-input
-                    placeholder="Informe seu nome"
-                    id="nomemissa"
-                    v-model="nome"
-                  ></b-form-input>
+                  <b-form-input placeholder="Informe seu nome" id="nomemissa" v-model="nome"></b-form-input>
                 </b-form-group>
               </b-col>
               <b-col cols="3">
                 <b-form-group label="Idade" label-for="idademissa">
-                  <b-form-input
-                    placeholder="Idade"
-                    id="idademissa"
-                    v-model="idade"
-                  ></b-form-input>
+                  <b-form-input placeholder="Idade" id="idademissa" v-model="idade"></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
@@ -62,13 +44,12 @@
         </b-form>
         <b-row>
           <b-col>
-            <b-button variant="success"  block="" @click="agendarMissa">
-              <b-icon icon="calendar-plus-fill" class="mr-2" aria-hidden="true"></b-icon>
-              Agendar Missa
+            <b-button variant="success" block @click="agendarMissa">
+              <b-icon icon="calendar-plus-fill" class="mr-2" aria-hidden="true"></b-icon>Agendar Missa
             </b-button>
           </b-col>
           <b-col>
-            <b-button variant="primary" block="" @click="tstReservas">Cancelar</b-button>
+            <b-button variant="primary" block @click="tstReservas">Cancelar</b-button>
           </b-col>
         </b-row>
       </b-col>
@@ -118,10 +99,10 @@ export default {
       comunidade: [
         { value: null, text: "Selecione o local" },
         { value: "fatima", text: "Paróquia Nossa Senhora de Fátima" },
-        { value: "saojose", text: "Comunidade São Jose" },
+        { value: "saojose", text: "Comunidade São Jose" }
       ],
       horario: [],
-      bmissa: true,
+      bmissa: true
     };
   },
   methods: {
@@ -130,7 +111,7 @@ export default {
         title: msgtitle,
         variant: variant,
         toaster: "b-toaster-bottom-full",
-        solid: true,
+        solid: true
       });
     },
     SetHorario() {
@@ -151,10 +132,10 @@ export default {
           params: {
             datamissa: this.datamissa,
             horamissa: this.horamissa,
-            comunidade: this.selcomunidade,
-          },
+            comunidade: this.selcomunidade
+          }
         })
-        .then((response) => {
+        .then(response => {
           if (response.status == 200) {
             this.assentosocupados = response.data.length;
             this.assentoslivres = this.totalassentos - this.assentosocupados;
@@ -165,7 +146,7 @@ export default {
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch((error) => {
+        .catch(error => {
           this.assentoslivres = this.totalassentos;
           console.log("Retorno com erro!");
           console.log(error);
@@ -260,8 +241,7 @@ export default {
         }
       }
     },
-    agendarMissa()
-    {
+    agendarMissa() {
       console.log("Passei aqui Alexandre no botao");
       console.log("Comunidade.: " + this.selcomunidade);
       console.log("Data.: " + this.datamissa);
@@ -273,44 +253,75 @@ export default {
       this.assento = 88;
       console.log("Assento.: " + this.assento);
 
+      if (this.nome == "" || this.nome.length == 0) {
+        this.makeToast(
+          "primary",
+          "Atenção: Falha no preenchimento do campo!",
+          "O nome deve ser informado para agendamento!"
+        );
+        return;
+      }
+
+      if (this.idade == "" || this.idade.length == 0) {
+        this.makeToast(
+          "primary",
+          "Atenção: Falha no preenchimento do campo!",
+          "A idade deve ser informada para agendamento!"
+        );
+        return;
+      }
+
+      if (this.celular == "" || this.celular.length == 0) {
+        this.makeToast(
+          "primary",
+          "Atenção: Falha no preenchimento do campo!",
+          "O número do celular deve ser informado para agendamento!"
+        );
+        return;
+      }
+
+      if (this.idade < 12 || this.idade > 59) {
+        this.makeToast(
+          "warning",
+          "Atenção: ",
+          "Idade fora da faixa estipulada pela Diocese!"
+        );
+        return;
+      }
+
       Vue.axios
         .post("missa", {
-          
-            datamissa: this.datamissa,
-            horamissa: this.horamissa,
-            comunidade: this.selcomunidade,
-            nome:this.nome,
-            celular:this.celular,
-            idade:this.idade,
-            assento:this.assento
-          
+          datamissa: this.datamissa,
+          horamissa: this.horamissa,
+          comunidade: this.selcomunidade,
+          nome: this.nome,
+          celular: this.celular,
+          idade: this.idade,
+          assento: this.assento
         })
-        .then((response) => {
-
-          console.log(response.status)
+        .then(response => {
+          console.log(response.status);
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("Retorno com erro!");
           console.log(error);
         })
         .then(function() {
           console.log("Sempre passa aqui!");
         });
-      
-      
     },
-    tstReservas(){
+    tstReservas() {
       Vue.axios
         .get("missas", {
           params: {
             datamissa: "2020-08-11",
             horamissa: "19:30",
-            comunidade: "fatima",
-          },
+            comunidade: "fatima"
+          }
         })
-        .then((response) => {
+        .then(response => {
           if (response.status == 200) {
             this.assentosocupados = response.data.length;
             this.assentoslivres = this.totalassentos - this.assentosocupados;
@@ -321,7 +332,7 @@ export default {
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch((error) => {
+        .catch(error => {
           this.assentoslivres = this.totalassentos;
           console.log("Retorno com erro!");
           console.log(error);
@@ -330,7 +341,7 @@ export default {
           console.log("Sempre passa aqui!");
         });
     }
-  },
+  }
 };
 </script>
 
