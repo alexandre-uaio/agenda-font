@@ -23,21 +23,28 @@
             <b-row>
               <b-col cols="9">
                 <b-form-group label="Nome" label-for="nomemissa">
-                  <b-form-input placeholder="Informe seu nome" id="nomemissa" v-model="nome"></b-form-input>
+                  <b-form-input
+                    placeholder="Informe seu nome"
+                    id="nomemissa"
+                    v-model="nome"
+                    required
+                  ></b-form-input>
                 </b-form-group>
               </b-col>
               <b-col cols="3">
                 <b-form-group label="Idade" label-for="idademissa">
-                  <b-form-input placeholder="Idade" id="idademissa" v-model="idade"></b-form-input>
+                  <b-form-input placeholder="Idade" id="idademissa" v-model="idade" required></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
 
-            <b-form-group label="celular" label-for="celularmissa">
+            <b-form-group label="Celular [Ex: (35)988410304]" label-for="celularmissa">
               <b-form-input
                 placeholder="Informe seu celular/telefone"
                 id="celularmissa"
                 v-model="celular"
+                :formatter="CelularFormater"
+                required
               ></b-form-input>
             </b-form-group>
           </div>
@@ -297,12 +304,21 @@ export default {
           nome: this.nome,
           celular: this.celular,
           idade: this.idade,
-          assento: this.assento
+          assento: this.assentosocupados + 1
         })
         .then(response => {
           console.log(response.status);
           console.log("Resposta do Comando");
           console.log(response);
+          if (response.status == 200) {
+            if (response.data.erro == 0) {
+              console.log("Resposta veio com status 200 e erro.: 0");
+            } else {
+              console.log(
+                "Resposta veio com status 200 e erro.: " + response.data.erro
+              );
+            }
+          }
         })
         .catch(error => {
           console.log("Retorno com erro!");
@@ -340,6 +356,20 @@ export default {
         .then(function() {
           console.log("Sempre passa aqui!");
         });
+    },
+    CelularFormater(_txt) {
+      console.log(_txt);
+      if (_txt.length == 1 && _txt != "(") {
+        return "(" + _txt;
+      } else if (_txt.length == 3) {
+        console.log(_txt.indexOf(")"));
+        return _txt + ")";
+      } else if (_txt.length > 13) {
+        console.log("Passei aqui");
+        console.log(_txt.substr(0, _txt.length - 1));
+        return _txt.substr(0, _txt.length - 1);
+      }
+      return _txt;
     }
   }
 };
