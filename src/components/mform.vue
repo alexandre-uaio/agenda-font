@@ -8,16 +8,27 @@
               id="localmissa"
               v-model="selcomunidade"
               :options="comunidade"
-              @change="SetHorario"
+              @change="setComunidade"
             ></b-form-select>
           </b-form-group>
 
           <b-form-group label="Data" label-for="datamissa">
-            <b-form-datepicker id="datamissa" v-model="datamissa" @context="onContext" class="mb-2"></b-form-datepicker>
+            <b-form-datepicker
+              id="datamissa"
+              v-model="datamissa"
+              @context="onContext"
+              class="mb-2"
+            ></b-form-datepicker>
           </b-form-group>
 
           <b-form-group label="Horário" label-for="horamissa">
-            <b-form-select id="horamissa" v-model="horamissa" :options="horario" @change="SetTeste"></b-form-select>
+            <b-form-select
+              id="horamissa"
+              placeholder="Selecione a Hora"
+              v-model="horamissa"
+              :options="horario"
+              @change="setHorario"
+            ></b-form-select>
           </b-form-group>
           <div v-if="bmissa">
             <b-row>
@@ -27,41 +38,69 @@
                     placeholder="Informe seu nome"
                     id="nomemissa"
                     v-model="nome"
-                    required
                   ></b-form-input>
                 </b-form-group>
               </b-col>
               <b-col cols="3">
                 <b-form-group label="Idade" label-for="idademissa">
-                  <b-form-input placeholder="Idade" id="idademissa" v-model="idade" required></b-form-input>
+                  <b-form-input
+                    placeholder="Idade"
+                    id="idademissa"
+                    v-model="idade"
+                  ></b-form-input>
                 </b-form-group>
               </b-col>
             </b-row>
 
-            <b-form-group label="Celular [Ex: (35)988410304]" label-for="celularmissa">
+            <b-form-group
+              label="Celular [Ex: (35)988410304]"
+              label-for="celularmissa"
+            >
               <b-form-input
                 placeholder="Informe seu celular/telefone"
                 id="celularmissa"
                 v-model="celular"
                 :formatter="CelularFormater"
-                required
               ></b-form-input>
             </b-form-group>
           </div>
         </b-form>
-        <b-row>
+        <b-row v-if="bmissa">
           <b-col>
             <b-button variant="success" block @click="agendarMissa">
-              <b-icon icon="calendar-plus-fill" class="mr-2" aria-hidden="true"></b-icon>Agendar Missa
+              <b-icon
+                icon="calendar-plus-fill"
+                class="mr-2"
+                aria-hidden="true"
+              ></b-icon
+              >Agendar Missa
             </b-button>
           </b-col>
           <b-col>
-            <b-button variant="primary" block @click="tstReservas">Cancelar</b-button>
+            <b-button variant="primary" block @click="tstReservas"
+              >Cancelar</b-button
+            >
+          </b-col>
+        </b-row>
+        <b-row v-if="bcodigo">
+          <b-col>
+            <b-card
+              img-src="../assets/reservaok.gif"
+              img-alt="Image"
+              img-top
+              tag="article"
+              class="mb-2"
+            >
+              <b-card-text>
+                <h3>Código: {{ codigoreserva }}</h3>
+              </b-card-text>
+              <b-button @click="novaReserva">Nova Reserva</b-button>
+            </b-card>
           </b-col>
         </b-row>
       </b-col>
       <b-col>
-        <b-card-group columns v-if="bmissa">
+        <b-card-group columns v-if="bassentos">
           <b-card bg-variant="success" text-variant="white" class="text-center">
             <template v-slot:header>
               <b-icon icon="unlock-fill"></b-icon>
@@ -106,10 +145,13 @@ export default {
       comunidade: [
         { value: null, text: "Selecione o local" },
         { value: "fatima", text: "Paróquia Nossa Senhora de Fátima" },
-        { value: "saojose", text: "Comunidade São Jose" }
+        { value: "saojose", text: "Comunidade São Jose" },
       ],
       horario: [],
-      bmissa: true
+      codigoreserva: 0,
+      bmissa: false,
+      bassentos: false,
+      bcodigo: false,
     };
   },
   methods: {
@@ -117,18 +159,19 @@ export default {
       this.$bvToast.toast(msgbody, {
         title: msgtitle,
         variant: variant,
+        autoHideDelay: 5000,
         toaster: "b-toaster-bottom-full",
-        solid: true
+        solid: true,
       });
     },
-    SetHorario() {
+    setComunidade() {
       if (this.selcomunidade == "fatima") {
         console.log(this.selcomunidade);
       } else {
         console.log("Não foi na paróquia!");
       }
     },
-    SetTeste() {
+    setHorario() {
       console.log("Comunidade.: " + this.selcomunidade);
       console.log("Data.: " + this.datamissa);
       console.log("Dia Missa.: " + this.diamissa);
@@ -139,10 +182,10 @@ export default {
           params: {
             datamissa: this.datamissa,
             horamissa: this.horamissa,
-            comunidade: this.selcomunidade
-          }
+            comunidade: this.selcomunidade,
+          },
         })
-        .then(response => {
+        .then((response) => {
           if (response.status == 200) {
             this.assentosocupados = response.data.length;
             this.assentoslivres = this.totalassentos - this.assentosocupados;
@@ -150,11 +193,16 @@ export default {
           } else {
             this.assentoslivres = this.totalassentos;
           }
+          this.bmissa = true;
+          this.bassentos = true;
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch(error => {
+        .catch((error) => {
           this.assentoslivres = this.totalassentos;
+          this.assentosocupados = 0;
+          this.bmissa = true;
+          this.bassentos = true;
           console.log("Retorno com erro!");
           console.log(error);
         })
@@ -196,8 +244,9 @@ export default {
             );
             return;
           }
-
-          this.Teste();
+          this.selhorario = null;
+          this.horamissa = null;
+          this.fillSelectHorario();
         }
       }
 
@@ -231,7 +280,7 @@ export default {
 
       return retval;
     },
-    async Teste() {
+    async fillSelectHorario() {
       const hrl = await fetch("horario.json");
       const hrl2 = await hrl.json();
 
@@ -247,6 +296,8 @@ export default {
           this.horario.push(horatmp[i]);
         }
       }
+
+      console.log("Passei aqui na função Fill Select");
     },
     agendarMissa() {
       console.log("Passei aqui Alexandre no botao");
@@ -304,15 +355,26 @@ export default {
           nome: this.nome,
           celular: this.celular,
           idade: this.idade,
-          assento: this.assentosocupados + 1
+          assento: this.assentosocupados + 1,
         })
-        .then(response => {
+        .then((response) => {
           console.log(response.status);
           console.log("Resposta do Comando");
           console.log(response);
           if (response.status == 200) {
             if (response.data.erro == 0) {
               console.log("Resposta veio com status 200 e erro.: 0");
+              this.codigoreserva = response.data.codigoreserva;
+              this.assentoslivres -= 1;
+              this.assentosocupados = this.codigoreserva
+              this.makeToast(
+                "success",
+                "Atenção: ",
+                "Agendamento realizado com sucesso!"
+              );
+
+              this.bmissa = false;
+              this.bcodigo = true;
             } else {
               console.log(
                 "Resposta veio com status 200 e erro.: " + response.data.erro
@@ -320,9 +382,15 @@ export default {
             }
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("Retorno com erro!");
-          console.log(error);
+          if (error.response.status == 400) {
+            this.makeToast(
+              "danger",
+              "Atenção: ",
+              "Reserva duplicada para esta data, favor agendar para outra data!"
+            );
+          }
         })
         .then(function() {
           console.log("Sempre passa aqui!");
@@ -334,10 +402,10 @@ export default {
           params: {
             datamissa: "2020-08-11",
             horamissa: "19:30",
-            comunidade: "fatima"
-          }
+            comunidade: "fatima",
+          },
         })
-        .then(response => {
+        .then((response) => {
           if (response.status == 200) {
             this.assentosocupados = response.data.length;
             this.assentoslivres = this.totalassentos - this.assentosocupados;
@@ -348,7 +416,7 @@ export default {
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch(error => {
+        .catch((error) => {
           this.assentoslivres = this.totalassentos;
           console.log("Retorno com erro!");
           console.log(error);
@@ -370,8 +438,23 @@ export default {
         return _txt.substr(0, _txt.length - 1);
       }
       return _txt;
-    }
-  }
+    },
+    novaReserva() {
+      this.bmissa = false;
+      this.bassentos = false;
+      this.bcodigo = false;
+      this.datamissa = null;
+      this.horamissa = null;
+      this.selcomunidade = null;
+      this.nome = "";
+      this.celular = "";
+      this.idade = "";
+      this.assentosocupados = 0;
+      this.assentoslivres = 0;
+      this.assento = 0;
+      this.assentoindex = 0;
+    },
+  },
 };
 </script>
 

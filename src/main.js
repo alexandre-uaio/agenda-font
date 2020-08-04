@@ -17,8 +17,9 @@ Vue.use(IconsPlugin);
 Vue.use(
   VueAxios,
   axios.create({
-    baseURL: "http://192.168.99.10:3333/",
+    //baseURL: "http://192.168.99.10:3333/",
     //baseURL: "http://127.0.0.1:3333/",
+    baseURL: "http://192.168.9.233:3333/",
   })
 );
 
