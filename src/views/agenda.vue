@@ -1,8 +1,8 @@
 <template>
-  <div class="container-fluid">
-    <h2 class="dlgtit">AGENDAMENTO PARA A CELEBRAÇÃO DA SANTA MISSA</h2>
-    <Mform></Mform>
-  </div>
+  <b-container fluid="">
+    <h4 class="dlgtit">AGENDA CELEBRAÇÃO DA SANTA MISSA</h4>
+    <Mform class="mt-2"></Mform>
+  </b-container>
 </template>
 
 <script>

@@ -1,8 +1,8 @@
 <template>
-  <b-container fluid="sm">
-    <b-row>
-      <b-col>
-        <b-form class="missaform">
+  <b-container class="divcontainer">
+    <div>
+      <b-form class="missaform">
+        <div>
           <b-form-group label="Local" label-for="localmissa">
             <b-form-select
               id="localmissa"
@@ -30,98 +30,136 @@
               @change="setHorario"
             ></b-form-select>
           </b-form-group>
-          <div v-if="bmissa">
-            <b-row>
-              <b-col cols="9">
-                <b-form-group label="Nome" label-for="nomemissa">
-                  <b-form-input
-                    placeholder="Informe seu nome"
-                    id="nomemissa"
-                    v-model="nome"
-                  ></b-form-input>
-                </b-form-group>
-              </b-col>
-              <b-col cols="3">
-                <b-form-group label="Idade" label-for="idademissa">
-                  <b-form-input
-                    placeholder="Idade"
-                    id="idademissa"
-                    v-model="idade"
-                  ></b-form-input>
-                </b-form-group>
-              </b-col>
-            </b-row>
-
-            <b-form-group
-              label="Celular [Ex: (35)988410304]"
-              label-for="celularmissa"
+        </div>
+        <div v-if="bassentos">
+          <b-card-group deck>
+            <b-card
+              bg-variant="success"
+              text-variant="white"
+              class="text-center"
             >
-              <b-form-input
-                placeholder="Informe seu celular/telefone"
-                id="celularmissa"
-                v-model="celular"
-                :formatter="CelularFormater"
-              ></b-form-input>
-            </b-form-group>
-          </div>
-        </b-form>
-        <b-row v-if="bmissa">
-          <b-col>
-            <b-button variant="success" block @click="agendarMissa">
+              <template v-slot:header>
+                <b-icon icon="unlock-fill" class="mr-2"></b-icon>
+                <span>LIVRES</span>
+              </template>
+              <b-card-text>
+                <h3>{{ assentoslivres }}</h3>
+              </b-card-text>
+            </b-card>
+            <b-card
+              bg-variant="danger"
+              text-variant="white"
+              class="text-center"
+            >
+              <template v-slot:header>
+                <b-icon icon="lock-fill" class="mr-2"></b-icon>
+                <span>OCUPADOS</span>
+              </template>
+              <b-card-text>
+                <h3>{{ assentosocupados }}</h3>
+              </b-card-text>
+            </b-card>
+          </b-card-group>
+        </div>
+
+        <div v-if="bencerrada" class="mt-3">
+          <b-card
+            bg-variant="warning"
+            text-variant="white"
+            title="Agendamento Encerrado"
+          >
+            <b-card-text>
+              A agendamento foi encerrado devido ao preenchimento de todas as
+              vagas para esta celebração!
+            </b-card-text>
+            <b-button variant="primary" @click="novaReserva"
+              >Selecionar outra data</b-button
+            >
+          </b-card>
+        </div>
+
+        <div v-if="bmissa" class="mt-3">
+          <b-row>
+            <b-col cols="9">
+              <b-form-group label="Nome" label-for="nomemissa">
+                <b-form-input
+                  placeholder="Informe seu nome"
+                  id="nomemissa"
+                  v-model="nome"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+            <b-col cols="3">
+              <b-form-group label="Idade" label-for="idademissa">
+                <b-form-input
+                  placeholder="Idade"
+                  id="idademissa"
+                  v-model="idade"
+                ></b-form-input>
+              </b-form-group>
+            </b-col>
+          </b-row>
+
+          <b-form-group label="Celular" label-for="celularmissa">
+            <b-form-input
+              placeholder="Informe seu celular/telefone"
+              id="celularmissa"
+              v-model="celular"
+              :formatter="CelularFormater"
+            ></b-form-input>
+          </b-form-group>
+        </div>
+        <div v-if="bmissa">
+          <b-row>
+            <b-col>
+              <b-button size="md" variant="success" block @click="agendarMissa">
+                <b-icon
+                  icon="calendar-plus-fill"
+                  class="mr-2"
+                  aria-hidden="true"
+                ></b-icon
+                >Agendar
+              </b-button>
+            </b-col>
+            <b-col>
+              <b-button size="md" variant="primary" block @click="novaReserva">
+                <b-icon
+                  icon="trash-fill"
+                  class="mr-2"
+                  aria-hidden="true"
+                ></b-icon>
+                Cancelar</b-button
+              >
+            </b-col>
+          </b-row>
+        </div>
+      </b-form>
+    </div>
+    <div v-if="bcodigo" class="mt-3">
+      <b-row>
+        <b-col>
+          <b-card
+            img-src="../assets/reservaokp.gif"
+            img-alt="Image"
+            img-top
+            tag="article"
+            class="mb-2"
+          >
+            <b-card-text>
+              <h3>Código Reserva: {{ codigoreserva }}</h3>
+            </b-card-text>
+            <b-button @click="novaReserva" block variant="info">
               <b-icon
                 icon="calendar-plus-fill"
                 class="mr-2"
                 aria-hidden="true"
-              ></b-icon
-              >Agendar Missa
-            </b-button>
-          </b-col>
-          <b-col>
-            <b-button variant="primary" block @click="tstReservas"
-              >Cancelar</b-button
+              ></b-icon>
+              Nova Reserva</b-button
             >
-          </b-col>
-        </b-row>
-        <b-row v-if="bcodigo">
-          <b-col>
-            <b-card
-              img-src="../assets/reservaok.gif"
-              img-alt="Image"
-              img-top
-              tag="article"
-              class="mb-2"
-            >
-              <b-card-text>
-                <h3>Código: {{ codigoreserva }}</h3>
-              </b-card-text>
-              <b-button @click="novaReserva">Nova Reserva</b-button>
-            </b-card>
-          </b-col>
-        </b-row>
-      </b-col>
-      <b-col>
-        <b-card-group columns v-if="bassentos">
-          <b-card bg-variant="success" text-variant="white" class="text-center">
-            <template v-slot:header>
-              <b-icon icon="unlock-fill"></b-icon>
-              <h6 class="mb-0">LIVRES</h6>
-            </template>
-            <b-card-text>
-              <h1>{{ assentoslivres }}</h1>
-            </b-card-text>
           </b-card>
-          <b-card bg-variant="danger" text-variant="white" class="text-center">
-            <template v-slot:header>
-              <b-icon icon="lock-fill"></b-icon>
-              <h6 class="mb-0">OCUPADOS</h6>
-            </template>
-            <b-card-text>
-              <h1>{{ assentosocupados }}</h1>
-            </b-card-text>
-          </b-card>
-        </b-card-group>
-      </b-col>
-    </b-row>
+        </b-col>
+      </b-row>
+    </div>
   </b-container>
 </template>
 
@@ -152,6 +190,7 @@ export default {
       bmissa: false,
       bassentos: false,
       bcodigo: false,
+      bencerrada: false,
     };
   },
   methods: {
@@ -170,13 +209,18 @@ export default {
       } else {
         console.log("Não foi na paróquia!");
       }
+      if (this.bencerrada == true) {
+        this.novaReserva();
+      }
     },
     setHorario() {
       console.log("Comunidade.: " + this.selcomunidade);
       console.log("Data.: " + this.datamissa);
       console.log("Dia Missa.: " + this.diamissa);
       console.log("Hora.: " + this.horamissa);
-
+      if (this.bencerrada == true) {
+        this.novaReserva();
+      }
       Vue.axios
         .get("missas", {
           params: {
@@ -193,7 +237,11 @@ export default {
           } else {
             this.assentoslivres = this.totalassentos;
           }
-          this.bmissa = true;
+          if (this.assentoslivres > 0) {
+            this.bmissa = true;
+          } else {
+            this.bencerrada = true;
+          }
           this.bassentos = true;
           console.log("Resposta do Comando");
           console.log(response);
@@ -214,6 +262,9 @@ export default {
       console.log("Passei no contexto.: " + ctx.length);
 
       console.log(ctx);
+      if (this.bencerrada == true) {
+        this.novaReserva();
+      }
 
       if (ctx.selectedDate != null) {
         if (this.isDateInvalid()) {
@@ -366,7 +417,7 @@ export default {
               console.log("Resposta veio com status 200 e erro.: 0");
               this.codigoreserva = response.data.codigoreserva;
               this.assentoslivres -= 1;
-              this.assentosocupados = this.codigoreserva
+              this.assentosocupados = this.codigoreserva;
               this.makeToast(
                 "success",
                 "Atenção: ",
@@ -443,6 +494,7 @@ export default {
       this.bmissa = false;
       this.bassentos = false;
       this.bcodigo = false;
+      this.bencerrada = false;
       this.datamissa = null;
       this.horamissa = null;
       this.selcomunidade = null;
@@ -461,5 +513,7 @@ export default {
 <style lang="css" scoped>
 .missaform {
   text-align: left;
+}
+.divcontainer {
 }
 </style>
