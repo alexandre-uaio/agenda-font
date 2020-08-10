@@ -13,12 +13,7 @@
           </b-form-group>
 
           <b-form-group label="Data" label-for="datamissa">
-            <b-form-datepicker
-              id="datamissa"
-              v-model="datamissa"
-              @context="onContext"
-              class="mb-2"
-            ></b-form-datepicker>
+            <b-form-datepicker id="datamissa" v-model="datamissa" @context="onContext" class="mb-2"></b-form-datepicker>
           </b-form-group>
 
           <b-form-group label="Horário" label-for="horamissa">
@@ -33,11 +28,7 @@
         </div>
         <div v-if="bassentos">
           <b-card-group deck>
-            <b-card
-              bg-variant="success"
-              text-variant="white"
-              class="text-center"
-            >
+            <b-card bg-variant="success" text-variant="white" class="text-center">
               <template v-slot:header>
                 <b-icon icon="unlock-fill" class="mr-2"></b-icon>
                 <span>LIVRES</span>
@@ -46,11 +37,7 @@
                 <h3>{{ assentoslivres }}</h3>
               </b-card-text>
             </b-card>
-            <b-card
-              bg-variant="danger"
-              text-variant="white"
-              class="text-center"
-            >
+            <b-card bg-variant="danger" text-variant="white" class="text-center">
               <template v-slot:header>
                 <b-icon icon="lock-fill" class="mr-2"></b-icon>
                 <span>OCUPADOS</span>
@@ -63,18 +50,12 @@
         </div>
 
         <div v-if="bencerrada" class="mt-3">
-          <b-card
-            bg-variant="warning"
-            text-variant="white"
-            title="Agendamento Encerrado"
-          >
+          <b-card bg-variant="warning" text-variant="white" title="Agendamento Encerrado">
             <b-card-text>
               A agendamento foi encerrado devido ao preenchimento de todas as
               vagas para esta celebração!
             </b-card-text>
-            <b-button variant="primary" @click="novaReserva"
-              >Selecionar outra data</b-button
-            >
+            <b-button variant="primary" @click="novaReserva">Selecionar outra data</b-button>
           </b-card>
         </div>
 
@@ -82,20 +63,12 @@
           <b-row>
             <b-col cols="9">
               <b-form-group label="Nome" label-for="nomemissa">
-                <b-form-input
-                  placeholder="Informe seu nome"
-                  id="nomemissa"
-                  v-model="nome"
-                ></b-form-input>
+                <b-form-input placeholder="Informe seu nome" id="nomemissa" v-model="nome"></b-form-input>
               </b-form-group>
             </b-col>
             <b-col cols="3">
               <b-form-group label="Idade" label-for="idademissa">
-                <b-form-input
-                  placeholder="Idade"
-                  id="idademissa"
-                  v-model="idade"
-                ></b-form-input>
+                <b-form-input placeholder="Idade" id="idademissa" v-model="idade"></b-form-input>
               </b-form-group>
             </b-col>
           </b-row>
@@ -113,23 +86,13 @@
           <b-row>
             <b-col>
               <b-button size="md" variant="success" block @click="agendarMissa">
-                <b-icon
-                  icon="calendar-plus-fill"
-                  class="mr-2"
-                  aria-hidden="true"
-                ></b-icon
-                >Agendar
+                <b-icon icon="calendar-plus-fill" class="mr-2" aria-hidden="true"></b-icon>Agendar
               </b-button>
             </b-col>
             <b-col>
               <b-button size="md" variant="primary" block @click="novaReserva">
-                <b-icon
-                  icon="trash-fill"
-                  class="mr-2"
-                  aria-hidden="true"
-                ></b-icon>
-                Cancelar</b-button
-              >
+                <b-icon icon="trash-fill" class="mr-2" aria-hidden="true"></b-icon>Cancelar
+              </b-button>
             </b-col>
           </b-row>
         </div>
@@ -149,13 +112,8 @@
               <h3>Código Reserva: {{ codigoreserva }}</h3>
             </b-card-text>
             <b-button @click="novaReserva" block variant="info">
-              <b-icon
-                icon="calendar-plus-fill"
-                class="mr-2"
-                aria-hidden="true"
-              ></b-icon>
-              Nova Reserva</b-button
-            >
+              <b-icon icon="calendar-plus-fill" class="mr-2" aria-hidden="true"></b-icon>Nova Reserva
+            </b-button>
           </b-card>
         </b-col>
       </b-row>
@@ -183,14 +141,14 @@ export default {
       comunidade: [
         { value: null, text: "Selecione o local" },
         { value: "fatima", text: "Paróquia Nossa Senhora de Fátima" },
-        { value: "saojose", text: "Comunidade São Jose" },
+        { value: "saojose", text: "Comunidade São Jose" }
       ],
       horario: [],
       codigoreserva: 0,
       bmissa: false,
       bassentos: false,
       bcodigo: false,
-      bencerrada: false,
+      bencerrada: false
     };
   },
   methods: {
@@ -200,14 +158,16 @@ export default {
         variant: variant,
         autoHideDelay: 5000,
         toaster: "b-toaster-bottom-full",
-        solid: true,
+        solid: true
       });
     },
     setComunidade() {
       if (this.selcomunidade == "fatima") {
         console.log(this.selcomunidade);
+        this.totalassentos = 130;
       } else {
         console.log("Não foi na paróquia!");
+        this.totalassentos = 78;
       }
       if (this.bencerrada == true) {
         this.novaReserva();
@@ -226,10 +186,10 @@ export default {
           params: {
             datamissa: this.datamissa,
             horamissa: this.horamissa,
-            comunidade: this.selcomunidade,
-          },
+            comunidade: this.selcomunidade
+          }
         })
-        .then((response) => {
+        .then(response => {
           if (response.status == 200) {
             this.assentosocupados = response.data.length;
             this.assentoslivres = this.totalassentos - this.assentosocupados;
@@ -246,7 +206,7 @@ export default {
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch((error) => {
+        .catch(error => {
           this.assentoslivres = this.totalassentos;
           this.assentosocupados = 0;
           this.bmissa = true;
@@ -389,14 +349,14 @@ export default {
         return;
       }
 
-      if (this.idade < 12 || this.idade > 59) {
+      /*if (this.idade < 12 || this.idade > 59) {
         this.makeToast(
           "warning",
           "Atenção: ",
           "Idade fora da faixa estipulada pela Diocese!"
         );
         return;
-      }
+      }*/
 
       Vue.axios
         .post("missa", {
@@ -406,9 +366,9 @@ export default {
           nome: this.nome,
           celular: this.celular,
           idade: this.idade,
-          assento: this.assentosocupados + 1,
+          assento: this.assentosocupados + 1
         })
-        .then((response) => {
+        .then(response => {
           console.log(response.status);
           console.log("Resposta do Comando");
           console.log(response);
@@ -433,7 +393,7 @@ export default {
             }
           }
         })
-        .catch((error) => {
+        .catch(error => {
           console.log("Retorno com erro!");
           if (error.response.status == 400) {
             this.makeToast(
@@ -453,10 +413,10 @@ export default {
           params: {
             datamissa: "2020-08-11",
             horamissa: "19:30",
-            comunidade: "fatima",
-          },
+            comunidade: "fatima"
+          }
         })
-        .then((response) => {
+        .then(response => {
           if (response.status == 200) {
             this.assentosocupados = response.data.length;
             this.assentoslivres = this.totalassentos - this.assentosocupados;
@@ -467,7 +427,7 @@ export default {
           console.log("Resposta do Comando");
           console.log(response);
         })
-        .catch((error) => {
+        .catch(error => {
           this.assentoslivres = this.totalassentos;
           console.log("Retorno com erro!");
           console.log(error);
@@ -505,8 +465,8 @@ export default {
       this.assentoslivres = 0;
       this.assento = 0;
       this.assentoindex = 0;
-    },
-  },
+    }
+  }
 };
 </script>
 
