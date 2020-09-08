@@ -9,7 +9,11 @@
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-        <b-collapse id="nav-collapse" is-nav></b-collapse>
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item-text>Ver:. 2.0.0</b-nav-item-text>
+          </b-navbar-nav>
+        </b-collapse>
       </b-navbar>
     </section>
     <router-view />

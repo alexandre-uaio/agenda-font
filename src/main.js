@@ -19,8 +19,8 @@ Vue.use(
   axios.create({
     //baseURL: "http://192.168.99.10:3333/",    //Rede Wifi Volt
     //baseURL: "http://127.0.0.1:3333/",        //Note Alexandre
-    baseURL: "http://192.168.9.4:3333/",        //Labserver 2
-    //baseURL: "http://138.94.52.123:3333/",    //KingHost
+    //baseURL: "http://192.168.9.4:3333/",        //Labserver 2
+    baseURL: "http://138.94.52.123:3333/",    //KingHost
   })
 );
 
